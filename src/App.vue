@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <Loader v-if="isLoading"/>
         <Navbar />
         <div class="container">
 
@@ -12,12 +13,27 @@
 
 <script>
 import Navbar from "@/components/common/Navbar";
+import Loader from "@/components/common/Loader";
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     name: 'App',
     components: {
-        Navbar
+        Navbar,
+        Loader
     },
+    methods: {
+        ...mapActions('user', ['fetchAllUsers']),
+        ...mapActions('album', ['fetchAllAlbums', 'fetchAllPhotos']),
+    },
+    async mounted() {
+        await this.fetchAllUsers();
+        await this.fetchAllAlbums();
+        await this.fetchAllPhotos();
+    },
+    computed: {
+        ...mapGetters(['isLoading']),
+    }
 }
 </script>
 
